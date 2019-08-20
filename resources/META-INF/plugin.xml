@@ -1,0 +1,39 @@
+<!--suppress PluginXmlValidity -->
+<idea-plugin>
+    <id>com.dvd.idea.vlang</id>
+    <name>V Language Support</name>
+    <vendor url="https://github.com/dvdandroid/v-intellij-plugin">dvdandroid</vendor>
+
+    <description><![CDATA[
+        <html>V language support for IntelliJ IDEA
+        </html>
+        ]]>
+    </description>
+
+    <!--    <actions/>-->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- initial hooks -->
+        <postStartupActivity implementation="com.dvd.idea.vlanguage.VStartup"/>
+<!--        <applicationService serviceImplementation="com.dvd.idea.vlanguage.settings.VSettings"/>-->
+        <fileType name="V language file" implementationClass="com.dvd.idea.vlanguage.file.VFileType"
+                  fieldName="INSTANCE"
+                  language="V" extensions="v"/>
+
+        <!-- language -->
+        <lang.parserDefinition language="V" implementationClass="com.dvd.idea.vlanguage.parser.VParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="V"
+                                       implementationClass="com.dvd.idea.vlanguage.highlight.VSyntaxHighlighterFactory"/>
+        <lang.commenter language="V" implementationClass="com.dvd.idea.vlanguage.editor.VCommenter"/>
+        <lang.braceMatcher language="V" implementationClass="com.dvd.idea.vlanguage.editor.VPairedBraceMatcher"/>
+<!--        <runConfigurationProducer implementation="com.dvd.idea.vlanguage.run.VRunConfigurationProducer"/>-->
+        <sdkType implementation="com.dvd.idea.vlanguage.sdk.VSdkType"/>
+
+        <!-- settings-->
+<!--        <applicationConfigurable groupId="language" instance="com.dvd.idea.vlanguage.settings.VSettingsConfigurable"-->
+<!--                                 id="preference.VSettingsConfigurable" displayName="V Language"/>-->
+        <configurationType implementation="com.dvd.idea.vlanguage.run.VRunConfigurationType"/>
+        <colorSettingsPage implementation="com.dvd.idea.vlanguage.highlight.VColorSettingsPage"/>
+    </extensions>
+
+</idea-plugin>

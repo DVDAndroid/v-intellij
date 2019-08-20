@@ -1,0 +1,132 @@
+{
+    parserClass="com.dvd.idea.vlanguage.VParser"
+    psiImplUtilClass="com.dvd.idea.vlanguage.psi.VPsiUtil"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="V"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.dvd.idea.vlanguage.psi"
+    psiImplPackage="com.dvd.idea.vlanguage.psi.impl"
+
+    elementTypeHolderClass="com.dvd.idea.vlanguage.psi.VElementTypes"
+    elementTypePrefix="V_"
+    elementTypeClass="com.dvd.idea.vlanguage.psi.VElementType"
+    tokenTypeClass="com.dvd.idea.vlanguage.psi.VTokenType"
+
+    tokens = [
+        IDENTIFIER          = 'regexp:[a-zA-Z_][a-zA-Z0-9_]*'
+        NUMBER              = 'regexp:[0-9]+'
+        LITERAL_STRING      = 'regexp:"[^"]*"'
+        COMMENT             = 'regexp:(//.+)|(/\*(.|\n)*\*/)'
+        LBRACE              = '{'
+        RBRACE              = '}'
+        LBRACK              = '['
+        RBRACK              = ']'
+        LPAREN              = '('
+        RPAREN              = ')'
+        COLON               = ':'
+        SEMICOLON           = ';'
+        COMMA               = ','
+        EQ                  = '=='
+        ASSIGN              = '='
+        NOT_EQ              = '!='
+        NOT                 = '!'
+        PLUS_PLUS           = '++'
+        PLUS_ASSIGN         = '+='
+        PLUS                = '+'
+        MINUS_MINUS         = '--'
+        MINUS_ASSIGN        = '-='
+        MINUS               = '-'
+        COND_OR             = '||'
+        BIT_OR_ASSIGN       = '|='
+        COND_AND            = '&&'
+        BIT_AND_ASSIGN      = '&='
+        BIT_AND             = '&'
+        BIT_OR              = '|'
+        SHIFT_LEFT_ASSIGN   = '<<='
+        SHIFT_LEFT          = '<<'
+        SEND_CHANNEL        = '<-'
+        LESS_OR_EQUAL       = '<='
+        LESS                = '<'
+        BIT_XOR_ASSIGN      = '^='
+        BIT_XOR             = '^'
+        MUL_ASSIGN          = '*='
+        MUL                 = '*'
+        QUOTIENT_ASSIGN     = '/='
+        QUOTIENT            = '/'
+        REMAINDER_ASSIGN    = '%='
+        REMAINDER           = '%'
+        SHIFT_RIGHT_ASSIGN  = '>>='
+        SHIFT_RIGHT         = '>>'
+        GREATER_OR_EQUAL    = '>='
+        GREATER             = '>'
+        VAR_ASSIGN          = ':='
+        TRIPLE_DOT          = '...'
+        DOT                 = '.'
+        OPTIONAL            = '?'
+    ]
+}
+
+File ::= ModuleDeclaration?
+         ImportDeclaration*
+         ConstDeclaration*
+         InterfaceDeclaration*
+         EnumDeclaration*
+         StructDeclaration*
+         FunctionDeclaration*
+
+ModuleDeclaration ::= module IDENTIFIER
+ImportDeclaration ::= import IDENTIFIER
+
+ConstDeclaration ::= const '(' Constant+ ')'
+Constant ::= IDENTIFIER '=' Expression
+
+InterfaceDeclaration ::= interface IDENTIFIER '{' InterfaceFunction* '}'
+InterfaceFunction ::= IDENTIFIER '(' [ (FunctionParameterList ','?) ]  ')' FunctionResultType
+
+EnumDeclaration ::= enum IDENTIFIER '{' IDENTIFIER* '}'
+
+StructDeclaration ::= struct IDENTIFIER '{' (StructVariablesDeclaration)+ '}'
+StructVariablesDeclaration ::= (StructVariableModifier':')? FunctionParameter ('[skip]')?
+StructVariableModifier ::= mut | pub mut mut | pub mut | pub
+
+FunctionDeclaration ::= FunctionHeader FunctionBody
+FunctionHeader ::= fn IDENTIFIER '(' [ (FunctionParameterList ','?) ] ')' FunctionResultType?
+FunctionParameterList ::= FunctionParameter (',' (FunctionParameter | &')'))*
+FunctionParameter ::= IDENTIFIER Type?
+FunctionResultType ::= Type
+FunctionBody ::= Block
+
+Type ::= PrimitiveType | ArrayType
+PrimitiveType ::= NumericType | bool | string | byteptr | voidptr
+NumericType ::= IntegralType | FloatingPointType
+IntegralType ::= i8 | i16 | i32 | i64 | u8 | u16 | u32 | u64 | byte | int | rune
+FloatingPointType ::= f32 | f64
+ArrayType ::= '[' ']'PrimitiveType
+
+Block ::= '{' Statements? '}'
+Statements ::= Statement*
+Statement ::= VariableStatement | IfElseStatement | ForStatement | SwitchStatement | ReturnStatement
+
+VariableStatement ::= VariableModifiers? IDENTIFIER ':=' VariableInitializer
+VariableModifiers ::= mut
+VariableInitializer ::= Expression | ArrayInitializer | IfStatement ElseIfStatement? ElseStatement
+ArrayInitializer ::= '[' Expression* ']'
+
+IfElseStatement ::= IfStatement ElseIfStatement? ElseStatement?
+IfStatement ::= if Expression '{' Statements '}'
+ElseStatement ::= else '{' Statements '}'
+ElseIfStatement ::= else IfStatement
+
+ForStatement ::= for Block | for Expression Block | for ForClassicStatement Block
+ForClassicStatement ::= VariableStatement';' Expression';' Expression
+
+SwitchStatement ::= switch Expression '{' SwitchBlockStatements '}'
+SwitchBlockStatements ::= SwitchCaseStatements+ SwitchDefaultStatements
+SwitchCaseStatements ::= case Expression':' Block
+SwitchDefaultStatements ::= default':' Block
+
+ReturnStatement ::= return Expression
+
+Expression ::= ciaoo

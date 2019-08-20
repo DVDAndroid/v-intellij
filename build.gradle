@@ -1,0 +1,93 @@
+import org.jetbrains.grammarkit.tasks.GenerateLexer
+import org.jetbrains.grammarkit.tasks.GenerateParser
+
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.41"
+    id 'org.jetbrains.intellij' version "0.4.10"
+    id "org.jetbrains.grammarkit" version "2019.2"
+}
+
+group "com.dvd.idea"
+version "0.0.1"
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.grammarkit'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+intellij {
+    version "2019.2"
+    type 'IU'
+    pluginName "V Language Support"
+    ideaDependencyCachePath = project.buildDir.path
+}
+
+runIde {
+    jvmArgs '-Xmx2G'
+}
+
+buildSearchableOptions {
+    // workaround for https://youtrack.jetbrains.com/issue/JBR-1550
+    //    jbrVersion = '11_0_2b159'
+    enabled = false
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java', 'gen']
+        kotlin.srcDirs = ['src/main/kotlin', 'gen']
+        resources.srcDir 'resources'
+    }
+
+    test {
+        java.srcDirs = ['src/test/java', 'gen']
+        kotlin.srcDirs = ['src/test/kotlin', 'gen']
+        resources.srcDir 'test-resources'
+    }
+}
+
+task generateVLexer(type: GenerateLexer) {
+    outputs.upToDateWhen { false }
+
+    source 'src/grammar/_VLexer.flex'
+    targetDir 'gen/com/dvd/idea/vlanguage'
+    targetClass 'VLexer'
+    purgeOldFiles = true
+}
+
+task generateVParser(type: GenerateParser) {
+    source "src/grammar/V.bnf"
+    targetRoot "gen/"
+    pathToParser "com/dvd/idea/vlanguage/VParser"
+    pathToPsiRoot "com/dvd/idea/vlanguage/psi"
+    purgeOldFiles true
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+    dependsOn generateVLexer, generateVParser
+}
+
+prepareSandbox {
+    doLast {
+        copy {
+            from "tmp/psiviewer"
+            into "${buildDir}/idea-sandbox/plugins/psiviewer"
+        }
+    }
+}
+
+clean {
+    delete("gen")
+}
