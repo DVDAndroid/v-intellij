@@ -8,6 +8,7 @@ A plugin that adds [V](http://vlang.io) support for the IntelliJ Platform IDEs.
 * ![done](https://img.shields.io/badge/status-done-success) Brace matcher
 * ![not complete](https://img.shields.io/badge/status-partial-orange) Run configuration & SDK configuration
 * ![not complete](https://img.shields.io/badge/status-partial-orange) Basic Syntax Validation and Highlighting
+* ![not started](https://img.shields.io/badge/status-not%20started-red) V package manager (VPM)
 * ![not started](https://img.shields.io/badge/status-not%20started-red) Autocompletion `CTRL + Space`
 * ![not started](https://img.shields.io/badge/status-not%20started-red) Folding
 * ![not started](https://img.shields.io/badge/status-not%20started-red) Formatter `CTRL + SHIFT + L`
