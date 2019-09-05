@@ -1,3 +1,6 @@
+# I'M GOING TO STOP DEVELOPING THIS PLUGIN FOR THE MOMENT. You are welcome to fork this repo
+
+
 # IntelliJ V Plugin
 
 A plugin that adds [V](http://vlang.io) support for the IntelliJ Platform IDEs.
