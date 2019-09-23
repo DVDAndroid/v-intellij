@@ -1,24 +1,26 @@
 package com.dvd.idea.vlanguage.sdk
 
+import com.intellij.execution.configurations.GeneralCommandLine
+import com.intellij.execution.process.CapturingProcessHandler
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.SystemInfo
 import java.io.File
-
+import java.util.concurrent.Future
 
 val suggestedPath = when {
-    SystemInfo.isWindows -> "C:\\AAAAAAAv"
+    SystemInfo.isWindows -> "C:\\v"
     SystemInfo.isLinux -> "/usr/local/bin/v"
     else -> null
-}
-
-fun getExeFromPath(): String? {
-    val path = System.getenv("PATH")
-    for (pathEntry in path.split(";")) {
-        if (File(pathEntry, executable).run { exists() && canExecute() }) return pathEntry
-    }
-
-    return null
 }
 
 val executable = if (SystemInfo.isWindows) "v.exe" else "v"
 
 fun validExec(path: String?) = path != null && File(path).run { exists() && canExecute() }
+
+fun getVVersion(path: String?): Future<String>? {
+    if (!validExec(path)) return null
+
+    return ApplicationManager.getApplication().executeOnPooledThread<String> {
+        return@executeOnPooledThread CapturingProcessHandler(GeneralCommandLine(path, "-v")).runProcess(1000).stdout
+    }
+}
